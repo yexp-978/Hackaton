@@ -1198,7 +1198,7 @@ void main(){float h=smoothstep(-0.03,0.55,vP.y);gl_FragColor=vec4(mix(bot,top,h)
     g.textBaseline = 'middle';
     g.fillText('RUTA PULSO', 24, H / 2 + 2);
     g.fillStyle = '#059669';
-    g.fillText('NFC', 420, H / 2 + 2);
+    g.fillText('NFC', 456, H / 2 + 2);
     g.fillStyle = '#334155';
     g.font = `800 50px ${FONT}`;
     g.textAlign = 'right';
@@ -2355,7 +2355,7 @@ function applyHtmlFrame(
     busEl.style.color = '#34D399';
     busEl.textContent = 'UNIDAD 04 · R-12';
   }
-  projectLabel(busEl, b.camera, W, H, new THREE.Vector3(bp.x, 4.45, bp.z), camPos.distanceTo(new THREE.Vector3(bp.x, 2, bp.z)) > 11);
+  projectLabel(busEl, b.camera, W, H, new THREE.Vector3(bp.x, 4.45, bp.z), camPos.distanceTo(new THREE.Vector3(bp.x, 2, bp.z)) > 20);
 
   for (const p of PEOPLE_LIST) {
     const st = pLabels[p.id];

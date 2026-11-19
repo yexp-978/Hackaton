@@ -1,18 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RUTA PULSO NFC — Gemelo Digital 3D y Monitoreo Operativo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-[#0B0F17] text-white antialiased selection:bg-emerald-500/30">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B0F17" />
+  <title>RUTA PULSO NFC · Gemelo Digital 3D</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+<div class="app" data-mob-tab="ctrl">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" data-i="pulse"></div>
+      <div style="min-width:0">
+        <div class="brand-name">RUTA PULSO <b>NFC</b></div>
+        <div class="brand-sub">Gemelo Digital 3D · Monitoreo operativo de transporte escolar y laboral nocturno</div>
+      </div>
+    </div>
+    <div class="chips">
+      <span class="chip chip-live"><span class="live-dot"></span><span>En línea</span></span>
+      <span class="chip chip-unit"><i data-i="bus"></i><span>U-04 · R-12</span></span>
+      <span class="chip mono chip-clock" id="clock">07:11:00</span>
+      <span class="chip chip-mode" id="modeChip"><i data-i="sun"></i><span>Turno diurno</span></span>
+      <button class="chip" id="btnSound" title="Activar o silenciar sonidos"><i data-i="vol"></i><span>Sonido</span></button>
+      <button class="chip chip-full" id="btnFull" title="Pantalla completa"><i data-i="max"></i></button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- ZONA 1: Escena 3D -->
+    <section class="scene" id="scene">
+      <canvas id="c3d" tabindex="0" aria-label="Escena 3D del gemelo digital"></canvas>
+      <div class="labels" id="labels"></div>
+      <div class="hud hud-tl">
+        <div class="hrow">
+          <div class="seg" id="segMode">
+            <button data-mode="day" class="on"><i data-i="sun"></i><span>Día</span><em class="desk-only">Modo Día</em></button>
+            <button data-mode="night"><i data-i="moon"></i><span>Nocturno</span><em class="desk-only">Modo Turno Nocturno</em></button>
+          </div>
+          <button class="pill on" id="btnAuto" title="La cámara se mueve sola durante los escenarios"><i data-i="video"></i><span>Auto</span><em class="desk-only">Cámara automática</em></button>
+        </div>
+        <div class="seg" id="segCam">
+          <button data-cam="pano" class="on"><i data-i="scan"></i><span>Panorámica</span><em class="desk-only">Vista Panorámica</em></button>
+          <button data-cam="nfc"><i data-i="nfc"></i><span>Lector NFC</span><em class="desk-only">Zoom al Lector NFC</em></button>
+          <button data-cam="bus"><i data-i="bus"></i><span>Autobús</span><em class="desk-only">Seguir Autobús</em></button>
+        </div>
+      </div>
+
+      <div class="hud legend" id="legend">
+        <h4>Geocercas</h4>
+        <div class="lg" style="color:#10B981"><i></i><span style="color:#dbe3ee">P1 · Abordaje autorizado</span></div>
+        <div class="lg" style="color:#3B82F6"><i></i><span style="color:#dbe3ee">P2 · Descenso autorizado</span></div>
+        <div class="lg" style="color:#EF4444"><i></i><span style="color:#dbe3ee">P3 · Zona no autorizada</span></div>
+        <hr />
+        <h4>Halo del lector NFC</h4>
+        <div class="lg-r">
+          <span style="color:#3B82F6"><i></i><em style="font-style:normal;color:#dbe3ee">En espera</em></span>
+          <span style="color:#10B981"><i></i><em style="font-style:normal;color:#dbe3ee">Validado</em></span>
+          <span style="color:#EF4444"><i></i><em style="font-style:normal;color:#dbe3ee">Alerta</em></span>
+          <span style="color:#D946EF"><i></i><em style="font-style:normal;color:#dbe3ee">Discreto</em></span>
+        </div>
+      </div>
+
+      <div class="caption" id="caption" data-tone="idle">
+        <div class="cap-tag" id="capTag">LISTO</div>
+        <div class="cap-text" id="capText">Selecciona un escenario en el panel de control para iniciar la simulación en vivo.</div>
+      </div>
+      <div class="vnote" id="vnote"><i data-i="eyeoff"></i><span><b>Gemelo digital · alerta silenciosa en curso.</b> En la cabina no suena nada ni se encienden luces: sólo C4 y los contactos de confianza lo saben.</span></div>
+      <div class="hint">Arrastra: rotar · Rueda: zoom · Clic derecho: desplazar</div>
+      <div class="loader" id="loader"><div class="ld"><div class="spin"></div><div><b>Inicializando gemelo digital 3D…</b><br />Construyendo avenida, paradas, unidad y lector NFC</div></div></div>
+    </section>
+
+    <!-- NAVEGACIÓN TÁCTIL SOLO EN TELÉFONOS (<= 768px) -->
+    <nav class="mob-tabs" id="mobTabs" aria-label="Secciones en móvil">
+      <button class="mob-tab on" data-tab="ctrl" type="button">
+        <i data-i="nfc"></i><span>Escenarios</span>
+      </button>
+      <button class="mob-tab" data-tab="phone" type="button">
+        <i data-i="bell"></i><span>Celular</span><b class="mob-badge z" id="mobPhBadge">0</b>
+      </button>
+      <button class="mob-tab" data-tab="log" type="button">
+        <i data-i="ucheck"></i><span>Bitácora</span><b class="mob-badge info z" id="mobLogBadge">0</b>
+      </button>
+    </nav>
+
+    <!-- ZONAS 2 y 3 -->
+    <aside class="side">
+      <section class="panel ctrl">
+        <div class="ph">
+          <div>
+            <h2><i data-i="nfc"></i>Panel de Control de Simulación NFC</h2>
+            <p>El 3D, la telemetría y el celular familiar se actualizan al instante</p>
+          </div>
+          <div class="acts">
+            <button class="btn primary" id="btnDemo"><i data-i="play"></i>Demo completa</button>
+            <button class="btn" id="btnReset"><i data-i="reset"></i>Reiniciar</button>
+          </div>
+        </div>
+
+        <div class="sub-h">Simular escenario en vivo <span>Unidad 04 · Ruta mixta escolar / laboral</span></div>
+        <div class="scen-grid">
+          <button class="scen s1" data-s="1"><span class="sn">1</span><span class="tx"><b>Abordaje Seguro con NFC</b><small>Parada 1 · validación y aviso a la familia</small></span><span class="ss"></span></button>
+          <button class="scen s2" data-s="2"><span class="sn">2</span><span class="tx"><b>Descenso Seguro + Tutor</b><small>Parada 2 · doble NFC: alumna + tutora</small></span><span class="ss"></span></button>
+          <button class="scen s3" data-s="3"><span class="sn">3</span><span class="tx"><b>Parada No Autorizada / Desvío</b><small>Parada 3 · alerta crítica a chofer y familia</small></span><span class="ss"></span></button>
+          <button class="scen s4" data-s="4"><span class="sn">4</span><span class="tx"><b>Alerta Silenciosa · Violeta</b><small>Turno nocturno · sin alerta en cabina</small></span><span class="ss"></span></button>
+        </div>
+
+        <div class="monitor" id="monitor" data-l="ok">
+          <div class="mon-ic" id="monIc"></div>
+          <div class="mon-b">
+            <div class="mon-k" id="monK">Centro de Monitoreo · C4</div>
+            <div class="mon-t" id="monT">Monitoreo normal</div>
+            <div class="mon-s" id="monS">Sin incidentes activos · Unidad 04 en servicio · enlace con C4 activo</div>
+          </div>
+          <div class="mon-side" id="monSide"></div>
+        </div>
+
+        <div class="sub-h">Telemetría en vivo <span id="gpsTxt">GPS 28.63810, -106.07720</span></div>
+        <div class="kpis">
+          <div class="kpi"><div class="k-l">Unidad activa</div><div class="k-v">U-04</div><div class="k-s">Chofer: Roberto S. · R-12</div></div>
+          <div class="kpi"><div class="k-l">Velocidad</div><div class="k-v"><span id="kSpd">0</span><small>km/h</small></div><div class="k-bar"><i id="kSpdBar"></i></div></div>
+          <div class="kpi"><div class="k-l">Pasajeros</div><div class="k-v"><span id="kPax">0</span><small>de 3</small></div><div class="k-s" id="kPaxS">Esperando abordaje</div></div>
+          <div class="kpi" id="kpiGeo"><div class="k-l">Geocerca</div><div class="k-v" id="kGeo">EN RUTA</div><div class="k-s" id="kGeoS">Corredor autorizado</div></div>
+          <div class="kpi" id="kpiSec"><div class="k-l">Seguridad</div><div class="k-v" id="kSec">ALTO</div><div class="k-bar"><i id="kSecBar"></i></div></div>
+          <div class="kpi" id="kpiRd"><div class="k-l">Lector NFC</div><div class="k-v" id="kRd">EN ESPERA</div><div class="k-s" id="kRdS">Halo azul · listo para leer</div></div>
+        </div>
+        <div class="keys">Atajos: <kbd>1</kbd>–<kbd>4</kbd> escenarios · <kbd>D</kbd> demo · <kbd>N</kbd> día/noche · <kbd>C</kbd> cámara · <kbd>R</kbd> reiniciar</div>
+      </section>
+
+      <section class="bottom">
+        <div class="phone-col">
+          <div class="phone" id="phone">
+            <div class="scr">
+              <div class="stbar"><span id="phTime">7:11</span><span class="island"></span><span class="st-ic"><span class="bars"><i style="height:35%"></i><i style="height:55%"></i><i style="height:78%"></i><i style="height:100%"></i></span><span style="font-size:.72em">5G</span><span class="batt"><i></i></span></span></div>
+              <div class="apph">
+                <div class="applogo" data-i="pulse"></div>
+                <div><b>Ruta Pulso</b><small>Familias y contactos de confianza</small></div>
+                <div class="bell"><i data-i="bell"></i><span id="phBadge" class="z">0</span></div>
+              </div>
+              <div class="phstrip"><span class="sd" id="phDot"></span><span id="phStrip">Unidad 04 en servicio · 3 pasajeros vinculados</span></div>
+              <div class="phlist" id="phList"><div class="phempty" id="phEmpty"><i data-i="bell"></i>Sin notificaciones.<br />Los avisos de la Unidad 04 llegarán aquí al instante.</div></div>
+              <div class="ovl" id="phOvl"></div>
+              <div class="homeind"></div>
+            </div>
+          </div>
+          <div class="phone-cap">Celular de la familia / contacto de confianza (notificaciones push)</div>
+        </div>
+
+        <section class="panel log">
+          <div class="ph"><h3><i data-i="ucheck"></i>Pasajeros y tutores</h3><span class="cnt">en vivo</span></div>
+          <div class="pax" id="paxList"></div>
+          <div class="ph lh"><h3><i data-i="nfc"></i>Bitácora NFC en vivo<span class="cnt" id="logCnt">0</span></h3><button class="btn sm" id="btnCopy"><i data-i="copy"></i>Copiar</button></div>
+          <ol id="logList"><li class="log-empty" id="logEmpty">Cada lectura NFC y evento de la unidad quedará registrado aquí con su hora exacta.</li></ol>
+        </section>
+      </section>
+    </aside>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>

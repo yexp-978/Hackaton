@@ -1,61 +1,63 @@
-// Archivo generado automáticamente leyendo el código fuente de RUTA PULSO NFC
+// Archivo generado automáticamente leyendo "RUTA PULSO NFC · Gemelo Digital 3D.html"
 export const APP_DATA = {
   "projectName": "RUTA PULSO NFC",
   "tagline": "Transporte Escolar y Laboral Nocturno Inteligente",
   "socialFocus": "Enfoque Social y Perspectiva de Género",
   "unitId": "U-04",
-  "routeName": "Corredor Norte Seguro",
+  "routeName": "Ruta R-12 · Mixta",
   "stops": [
     "Parada 1 · Escuela / Residencial",
     "Parada 2 · Parque Industrial / Destino",
-    "Parada 3 · Zona Aislada (No Autorizada)"
+    "Parada 3 · Zona Aislada"
   ],
   "scenarios": [
     {
       "id": 1,
-      "title": "Abordaje Seguro NFC",
-      "subtitle": "Parada 1 · Sofía M. + notificación"
+      "title": "Abordaje Seguro con NFC",
+      "subtitle": "Parada 1 · validación y aviso a la familia"
     },
     {
       "id": 2,
-      "title": "Descenso + Tutor Verificado",
-      "subtitle": "Parada 2 · Doble NFC escolar"
+      "title": "Descenso Seguro + Tutor",
+      "subtitle": "Parada 2 · doble NFC: alumna + tutora"
     },
     {
       "id": 3,
-      "title": "Parada No Autorizada",
-      "subtitle": "Parada 3 · Alerta crítica geocerca"
+      "title": "Parada No Autorizada / Desvío",
+      "subtitle": "Parada 3 · alerta crítica a chofer y familia"
     },
     {
       "id": 4,
-      "title": "Alerta Silenciosa (Género)",
-      "subtitle": "Protocolo Violeta · Doble toque NFC"
+      "title": "Alerta Silenciosa · Violeta",
+      "subtitle": "Turno nocturno · sin alerta en cabina"
     }
   ],
   "passengers": [
     {
       "name": "Sofía M.",
       "role": "Escolar",
-      "tagId": "NFC-ESC-104"
+      "tagId": "NFC-04A1"
     },
     {
-      "name": "Mateo R.",
+      "name": "Diego R.",
       "role": "Escolar",
-      "tagId": "NFC-ESC-208"
+      "tagId": "NFC-04B7"
     },
     {
       "name": "Ana L.",
       "role": "Turno Nocturno",
-      "tagId": "NFC-NOC-419"
+      "tagId": "NFC-07C2"
+    },
+    {
+      "name": "Laura M.",
+      "role": "Tutora autorizada de Sofía",
+      "tagId": "NFC-T219"
     }
   ],
   "sourceStats": {
     "filesAnalyzed": [
-      "src/App.tsx",
-      "src/scene/DigitalTwinEngine.ts",
-      "src/components/ControlDashboard.tsx",
-      "src/components/PhoneMockup.tsx"
+      "RUTA PULSO NFC · Gemelo Digital 3D.html"
     ],
-    "totalLinesOfCode": 2847
+    "totalLinesOfCode": 1615
   }
 } as const;
